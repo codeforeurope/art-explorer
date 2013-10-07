@@ -11,7 +11,7 @@ module CollectionData
       reader = Nokogiri::XML::Reader(file)
       reader.each do |node|
         fragment = Nokogiri::XML.fragment(node.inner_xml)
-        next unless fragment.at_xpath('atom[@name="TitAccessionNo"]') # skip unless node is an object to import
+        next unless CollectionData.is_item_node?(fragment) # skip unless node is an object to import
 
         attrs = {}
         CollectionData.FIELDS.each do |field|

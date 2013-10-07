@@ -43,6 +43,10 @@ module CollectionData
       ]
   end
 
+  def self.is_item_node?(xml_fragment)
+  !!xml_fragment.at_xpath('atom[@name="TitAccessionNo"]')
+end
+
   def self.clear
     CollectionItem.index.delete
   end
