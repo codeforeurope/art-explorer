@@ -12,7 +12,7 @@ class SearchMethod < Poncho::JSONMethod
     page = param(:p) || 1
     per_page = param(:pp) || 10
     response = CollectionItem.search(param(:q), page: page, per_page: per_page)
-    
+
     {
       total: response.total,
       items: response.results.map(&:as_json)

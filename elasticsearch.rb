@@ -1,3 +1,14 @@
+require 'yaml'
 require './elasticsearch/collection_item'
 
-Tire.configure { url "http://localhost:9200/" }
+module Elasticsearch
+  def self.rack_env
+    ENV['RACK_ENV'] || 'development'
+  end
+
+  def self.config
+    YAML::load(File.read('./config/tire.yml'))[self.rack_env]
+  end
+end
+
+Tire.configure { url Elasticsearch.config['url'] }
