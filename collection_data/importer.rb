@@ -3,38 +3,27 @@ module CollectionData
     attr_accessor :filename
 
     def initialize(filename)
-      self.filename = filename  
+      self.filename = filename
     end
 
     def import
       file = File.open(self.filename, 'r')
       reader = Nokogiri::XML::Reader(file)
+      convertor = CollectionData::Convertor.new
       reader.each do |node|
         fragment = Nokogiri::XML.fragment(node.inner_xml)
-        next unless CollectionData.is_item_node?(fragment) # skip unless node is an object to import
+        next unless is_item_node?(fragment) # skip unless node is an object to import
 
-        attrs = {}
-        CollectionData.FIELDS.each do |field|
-          fieldname = field[:fieldname]
-          attrs[fieldname] = value_for_field(field, fragment)
-        end
-
-        item = CollectionItem.create(attrs)
+        data = convertor.convert(fragment)
+        item = CollectionItem.create(data)
         logger.info "Imported '#{item.title}' by #{item.fullname}"
       end
     end
 
     private
 
-    def value_for_field(field, fragment)
-      xpath = field[:xpath]
-      value = nil
-      if field[:multivalued]
-        value = fragment.xpath(xpath).map(&:text) rescue []
-      else
-        value = fragment.at_xpath(xpath).text rescue ''
-      end
-      value
+    def is_item_node?(xml_fragment)
+      !!xml_fragment.at_xpath('atom[@name="TitAccessionNo"]')
     end
 
     def logger

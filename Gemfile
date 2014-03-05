@@ -5,6 +5,7 @@ gem 'tire'
 gem 'poncho'
 gem 'nokogiri'
 gem 'rake'
+gem 'data_smash', path: '../data_smash'
 
 group :test do
   gem 'rspec'

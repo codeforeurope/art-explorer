@@ -1,3 +1,8 @@
+PATH
+  remote: ../data_smash
+  specs:
+    data_smash (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -71,6 +76,7 @@ PLATFORMS
 
 DEPENDENCIES
   capistrano (>= 2.15.4)
+  data_smash!
   nokogiri
   poncho
   rack-test
