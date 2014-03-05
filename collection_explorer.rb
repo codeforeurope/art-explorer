@@ -3,19 +3,21 @@ require 'bundler'
 Bundler.require(:default)
 require './elasticsearch'
 
-class SearchMethod < Poncho::JSONMethod
-  param :q, :required => true
-  param :p
-  param :pp
+class DataAPI < Grape::API
+  version 'v1', using: :header, vendor: 'manchesterartgallery'
+  format :json
 
-  def invoke
-    page = param(:p) || 1
-    per_page = param(:pp) || 10
-    response = CollectionItem.search(param(:q), page: page, per_page: per_page)
+  desc 'Search the gallery collection'
+  get '/search' do
+    page = params.fetch(:p, 1).to_i
+    size = params.fetch(:pp, 10).to_i
+    from = (page-1) * size
+    q = params.fetch(:q, '*')
+    response = CollectionItem.search(q, from: from, size: size)
 
     {
       total: response.total,
-      items: response.results.map(&:as_json)
+      items: response.results
     }
   end
 end
@@ -25,5 +27,7 @@ class CollectionExplorer < Sinatra::Base
     enable :logging
   end
 
-  get '/search',   &SearchMethod
+  get '/' do
+    'Ohai!'
+  end
 end

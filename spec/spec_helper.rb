@@ -2,21 +2,17 @@ require './collection_explorer'
 require './collection_data'
 Bundler.require(:test)
 
-set :environment, :test
+ENV['RACK_ENV'] = 'test'
 
 RSpec.configure do |rspec|
   rspec.include Rack::Test::Methods
 
-  rspec.before(:all) do
-    CollectionItem.index_name 'test-collection-items'
-  end
-
   rspec.before(:each) do
-    CollectionItem.index.delete rescue nil # might not be an index yet
-    CollectionItem.index.create
+    Elasticsearch.clear
+    Elasticsearch.create_index
   end
 
   def app
-    CollectionExplorer
+    DataAPI
   end
 end

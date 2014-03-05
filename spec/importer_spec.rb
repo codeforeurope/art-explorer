@@ -4,7 +4,7 @@ describe CollectionData::Importer do
   let(:filename) { 'spec/support/example_data.xml' }
   let(:importer) { CollectionData::Importer.new(filename) }
 
-  it 'should store the filename' do
+  it 'should store the filename for later use' do
     importer.filename.should == filename
   end
 
@@ -16,17 +16,17 @@ describe CollectionData::Importer do
     end
 
     it 'should create a CollectionItem for each entry in the given data' do
-      expect{ importer.import; CollectionItem.index.refresh }.to change{ CollectionItem.search('*').size }.by(1)
+      expect{ importer.import; Elasticsearch.refresh }.to change{ CollectionItem.search('*').total }.by(1)
     end
 
     it 'should populate elasticsearch from the given xml file' do
       importer.import
-      CollectionItem.index.refresh
+      Elasticsearch.refresh
       CollectionItem.search("irn:123456").should_not be_empty
     end
 
     it 'should log each entry during import' do
-      logger.should_receive(:info).once
+      logger.should_receive(:info).twice
       importer.import
     end
   end

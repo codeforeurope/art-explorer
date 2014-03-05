@@ -10,14 +10,17 @@ module CollectionData
       file = File.open(self.filename, 'r')
       reader = Nokogiri::XML::Reader(file)
       convertor = CollectionData::Convertor.new
+      data = []
       reader.each do |node|
         fragment = Nokogiri::XML.fragment(node.inner_xml)
         next unless is_item_node?(fragment) # skip unless node is an object to import
 
-        data = convertor.convert(fragment)
-        item = CollectionItem.create(data)
-        logger.info "Imported '#{item.title}' by #{item.fullname}"
+        data << convertor.convert(fragment)
+        logger.info '.'
       end
+      logger.info "Importing..."
+      Elasticsearch.bulk_index(data, type: CollectionItem.index_type)
+      logger.info "Imported #{data.length} records"
     end
 
     private

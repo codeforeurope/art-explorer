@@ -1,6 +1,6 @@
 development:
-  url: 'localhost:9200'
+  host: 'localhost:9200'
 production:
-  url: 'mysecretlocaltion.com'
+  host: 'mysecretlocaltion.com'
 test:
-  url: 'localhost:9200'
+  host: 'localhost:9200'

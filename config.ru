@@ -5,5 +5,5 @@ logger = Logger.new('log/app.log')
 use Rack::CommonLogger, logger
 
 map '/' do
-  run CollectionExplorer
+  run Rack::Cascade.new [CollectionExplorer, DataAPI]
 end

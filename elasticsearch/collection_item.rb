@@ -1,7 +1,24 @@
-class CollectionItem
-  include Tire::Model::Persistence
+class CollectionItem < Hashie::Dash
 
-  self.include_root_in_json = false
+  def self.index_type
+    'collection_item'
+  end
+
+  def self.search(query, opts={})
+    from = opts.fetch(:from, 0)
+    size = opts.fetch(:size, 10)
+
+    response = Elasticsearch.search(
+      body: {
+        from: from,
+        size: size,
+        query: {query_string: { query: query } }
+      },
+      type: index_type
+    )
+    response.results.map!{|r| CollectionItem.new(r._source)}
+    response
+  end
 
   property :irn, type: 'integer'
   property :accession_number
@@ -31,12 +48,8 @@ class CollectionItem
   property :inscription
   property :provenance
   property :bibliography
-  property :media_irn, type: 'integer'
+
   property :tags
   property :content_tags
   property :subject_tags
-
-  def as_json
-    super(except: ['id'])
-  end
 end

@@ -3,14 +3,23 @@ require 'spec_helper'
 describe CollectionItem do
   let(:collection_item) { CollectionItem.search('*').results.first }
 
-  before do 
+  before do
     CollectionData::Importer.new('spec/support/example_data.xml').import
-    CollectionItem.index.refresh
+    Elasticsearch.refresh
   end
 
-  describe 'as_json' do
-    it 'should not include the elasticsearch identifier' do
-      collection_item.as_json.keys.should_not include('id')
+  describe '.search' do
+    it 'should return results as CollectionItems' do
+      results = CollectionItem.search('*').results
+      results.first.should be_a(CollectionItem)
+    end
+
+    it 'should return a total number of hits' do
+      CollectionItem.search('*').total.should == 1
+    end
+
+    context 'given a limit' do
+
     end
   end
 end
