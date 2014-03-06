@@ -4,18 +4,8 @@ class CollectionItem < Hashie::Dash
     'collection_item'
   end
 
-  def self.search(query, opts={})
-    from = opts.fetch(:from, 0)
-    size = opts.fetch(:size, 10)
-
-    response = Elasticsearch.search(
-      body: {
-        from: from,
-        size: size,
-        query: {query_string: { query: query } }
-      },
-      type: index_type
-    )
+  def self.search(body)
+    response = Elasticsearch.search(body: body, type: index_type)
     response.results.map!{|r| CollectionItem.new(r._source)}
     response
   end

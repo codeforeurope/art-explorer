@@ -16,18 +16,13 @@ describe CollectionData::Importer do
     end
 
     it 'should create a CollectionItem for each entry in the given data' do
-      expect{ importer.import; Elasticsearch.refresh }.to change{ CollectionItem.search('*').total }.by(1)
+      expect{ importer.import; Elasticsearch.refresh }.to change{ CollectionItem.search(query: {match_all: {}}).total }.by(1)
     end
 
     it 'should populate elasticsearch from the given xml file' do
       importer.import
       Elasticsearch.refresh
-      CollectionItem.search("irn:123456").should_not be_empty
-    end
-
-    it 'should log each entry during import' do
-      logger.should_receive(:info).twice
-      importer.import
+      CollectionItem.search(query: {match: {irn: '123456'}}).should_not be_empty
     end
   end
 end

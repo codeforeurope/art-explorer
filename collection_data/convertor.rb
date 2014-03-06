@@ -2,9 +2,11 @@ module CollectionData
   class Convertor
     include DataSmash::Convertor
 
-    def self.with_xpath(xpath, fieldname)
+    def self.with_xpath(xpath, fieldname, opts={})
+      multivalued = opts.fetch(:multivalued, false)
+
       ->(xml, data) {
-        data[fieldname] = xml.at_xpath(xpath).text rescue ''
+        data[fieldname] = (multivalued ? xml.xpath(xpath).map(&:text) : xml.at_xpath(xpath).text) rescue ''
         data
       }
     end
@@ -32,5 +34,9 @@ module CollectionData
     convert with_xpath('table[@name="Group3"]/tuple/atom[@name="PhyWidth"]', :width)
     convert with_xpath('table[@name="Group3"]/tuple/atom[@name="PhyUnitLength"]', :unit)
     convert with_xpath('atom[@name="PhyDescription"]', :description)
+
+    convert with_xpath('table[@name="TitCollectionGroup_tab"]/tuple/atom[@name="TitCollectionGroup"]', :tags, multivalued: true)
+    convert with_xpath('table[@name="PhyContentAnalysis_tab"]/tuple/atom[@name="PhyContentAnalysis"]', :content_tags, multiavlued: true)
+    convert with_xpath('table[@name="CreSubjectClassification_tab"]/tuple/atom[@name="CreSubjectClassification"]', :subject_tags, multivalued: true)
   end
 end

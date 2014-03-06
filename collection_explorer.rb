@@ -8,12 +8,22 @@ class DataAPI < Grape::API
   format :json
 
   desc 'Search the gallery collection'
+  params do
+    requires :q, type: String
+    optional :p, :pp, type: String
+  end
+
   get '/search' do
     page = params.fetch(:p, 1).to_i
     size = params.fetch(:pp, 10).to_i
     from = (page-1) * size
-    q = params.fetch(:q, '*')
-    response = CollectionItem.search(q, from: from, size: size)
+    q = params.fetch(:q)
+
+    response = CollectionItem.search({
+      from: from,
+      size: size,
+      query: { query_string: { query: q } }
+    })
 
     {
       total: response.total,

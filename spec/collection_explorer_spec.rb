@@ -15,7 +15,7 @@ describe DataAPI do
   it 'should return the results as JSON' do
     get '/search', q: '*'
     json = JSON.parse(last_response.body)
-    json['items'].first.should == CollectionItem.search('*').results.first
+    json['items'].first.should == CollectionItem.search(query: { match_all: {} }).results.first
   end
 
   context 'given a page size' do
