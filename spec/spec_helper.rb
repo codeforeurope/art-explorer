@@ -1,15 +1,25 @@
-require './collection_explorer'
-require './collection_data'
-Bundler.require(:test)
-
 ENV['RACK_ENV'] = 'test'
 
-RSpec.configure do |rspec|
-  rspec.include Rack::Test::Methods
+Bundler.require(:test)
+require './collection_explorer'
+require './collection_data'
 
-  rspec.before(:each) do
-    Elasticsearch.clear
-    Elasticsearch.create_index
+RSpec.configure do |config|
+  config.include Rack::Test::Methods
+
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do
+    Search.clear
+    Search.create_index
+
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
   end
 
   def app

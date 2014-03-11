@@ -19,7 +19,7 @@ module CollectionData
         logger.info '.'
       end
       logger.info "Importing..."
-      Elasticsearch.bulk_index(data, type: CollectionItem.index_type)
+      Search.bulk_index(data, type: CollectionItem.index_type)
       logger.info "Imported #{data.length} records"
     end
 

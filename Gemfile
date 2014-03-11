@@ -7,13 +7,17 @@ gem 'hashie'
 gem 'nokogiri'
 gem 'rake'
 gem 'data_smash', path: '../data_smash'
+gem 'mongoid'
+
+group :development do
+  gem 'grape_doc'
+end
 
 group :test do
   gem 'rspec'
   gem 'rack-test', require: 'rack/test'
+  gem 'database_cleaner'
 end
-
-gem 'capistrano', '>=2.15.4'
 
 group :production do
   gem 'unicorn'
