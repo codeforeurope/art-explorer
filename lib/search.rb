@@ -10,6 +10,7 @@ module Search
   end
 
   def self.client
+    # Elasticsearch::Client.new(host: Search.config['host'], trace: true, logger: DataAPI.logger)
     Elasticsearch::Client.new(host: Search.config['host'])
   end
 
@@ -19,7 +20,7 @@ module Search
 
     response = client.search index: Search.config['index'], type: type, body: body
     mash = Hashie::Mash.new response
-    Hashie::Mash.new(results: mash.hits.hits, total: mash.hits.total)
+    Hashie::Mash.new(results: mash.hits.hits, total: mash.hits.total, facets: mash.facets)
   end
 
   def self.bulk_index(data, opts)

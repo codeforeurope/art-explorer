@@ -6,7 +6,7 @@ describe DataAPI do
     Search.refresh
   end
 
-  let(:collection_item) { CollectionItem.search(query: { match_all: {} }).results.first }
+  let(:collection_item) { CollectionItem.find('123456') }
 
   describe 'GET /search' do
     it 'should return the total no. of results' do
@@ -19,6 +19,13 @@ describe DataAPI do
       get '/search', q: '*'
       json = JSON.parse(last_response.body)
       json['items'].first.should == collection_item
+    end
+
+    it 'should include facets' do
+      get '/search', q: '*'
+      json = JSON.parse(last_response.body)
+      facet = json['facets'][0]
+      facet['title'].should == 'medium'
     end
 
     context 'given a page size' do
@@ -52,6 +59,19 @@ describe DataAPI do
         item = json['items'][0]
         item['tags'].should == tags
       end
+    end
+  end
+
+  describe 'GET /:irn' do
+    it 'should respond successfully' do
+      get collection_item.irn
+      last_response.status.should == 200
+    end
+
+    it 'should return the collection item as JSON' do
+      get collection_item.irn
+      json = JSON.parse(last_response.body)
+      json.should == collection_item
     end
   end
 

@@ -12,7 +12,8 @@ class CollectionItem < Hashie::Dash
 
       response = Search.search(body: body, type: index_type)
       response.results.map!{|r| CollectionItem.from_result(r) }
-      add_tags!(response.results, uid) if uid
+      reduce_facets!(response) if response.facets
+      add_tags!(response, uid) if uid
       response
     end
 
@@ -26,13 +27,20 @@ class CollectionItem < Hashie::Dash
       CollectionItem.new(result._source)
     end
 
-    def add_tags!(results, uid)
-      irns = results.map(&:irn)
+    def add_tags!(response, uid)
+      irns = response.results.map(&:irn)
       records = Record.where(uid: uid).in(irn: irns)
-      results.map! do |result|
+      response.results.map! do |result|
         record = records.detect{|r| r.irn == result.irn}
         result.tags = record.tags if record
         result
+      end
+    end
+
+    def reduce_facets!(response)
+      response.facets = response.facets.reduce([]) do |memo, (k,v)|
+        memo << { title: k, options: v.terms }
+        memo
       end
     end
   end
@@ -46,7 +54,6 @@ class CollectionItem < Hashie::Dash
   property :fullname
   property :organisation
   property :role
-  property :accession_summary
   property :purchased
   property :created_on, type: 'integer'
   property :earliest_created_on, type: 'integer'
@@ -63,7 +70,6 @@ class CollectionItem < Hashie::Dash
   property :unit
   property :description
   property :inscription
-  property :provenance
   property :bibliography
 
   property :tags

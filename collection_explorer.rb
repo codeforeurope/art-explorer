@@ -11,8 +11,12 @@ require './models/record'
 Mongoid.load!(File.expand_path("config/mongoid.yml"))
 
 class DataAPI < Grape::API
+  use Rack::JSONP
+
   version 'v1', using: :header, vendor: 'manchesterartgallery'
   format :json
+
+  logger Logger.new('log/app.log')
 
   desc 'Search the gallery collection'
   params do
@@ -33,13 +37,21 @@ class DataAPI < Grape::API
     response = CollectionItem.search({
       from: from,
       size: size,
-      query: { query_string: { query: q } }
+      query: { query_string: { query: q } },
+      facets: {
+        medium: { terms: { field: 'medium', size: 999 } }
+      }
     }, opts)
 
     {
       total: response.total,
-      items: response.results
+      items: response.results,
+      facets: response.facets
     }
+  end
+
+  get '/:irn' do
+    CollectionItem.find(params[:irn])
   end
 
   rescue_from CollectionItem::RecordNotFound, Record::MalformedTags do |e|

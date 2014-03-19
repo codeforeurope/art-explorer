@@ -39,6 +39,11 @@
         <atom name="TitCollectionGroup">headwear</atom>
       </tuple>
     </table>
+    <table name="PhyMedium_tab">
+      <tuple>
+        <atom name="PhyMedium">hat</atom>
+      </tuple>
+    </table>
     <table name="PhyMaterial_tab">
       <tuple>
         <atom name="PhyMaterial">horsehair</atom>

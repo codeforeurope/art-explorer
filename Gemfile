@@ -8,6 +8,8 @@ gem 'nokogiri'
 gem 'rake'
 gem 'data_smash', path: '../data_smash'
 gem 'mongoid'
+gem 'rack-cors'
+gem 'rack-contrib'
 
 group :development do
   gem 'grape_doc'

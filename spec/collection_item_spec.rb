@@ -1,7 +1,10 @@
 require 'spec_helper'
 
 describe CollectionItem do
-  let(:query) { { query: {match_all: {}}} }
+  let(:query) { {
+    query: {match_all: {}},
+    facets: { medium: { terms: { field: 'medium' } } }
+  } }
   let(:collection_item) { search_response.results.first }
   let(:search_response) { CollectionItem.search(query) }
 
@@ -17,6 +20,11 @@ describe CollectionItem do
 
     it 'should return a total number of hits' do
       search_response.total.should == 1
+    end
+
+    it 'should include facets' do
+      facets = search_response.facets
+      facets[0].title.should == 'medium'
     end
   end
 

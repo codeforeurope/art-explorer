@@ -36,7 +36,7 @@ module CollectionData
     convert with_xpath('atom[@name="PhyDescription"]', :description)
 
     # convert with_xpath('table[@name="TitCollectionGroup_tab"]/tuple/atom[@name="TitCollectionGroup"]', :tags, multivalued: true)
-    convert with_xpath('table[@name="PhyContentAnalysis_tab"]/tuple/atom[@name="PhyContentAnalysis"]', :content_tags, multivalued: true)
-    convert with_xpath('table[@name="CreSubjectClassification_tab"]/tuple/atom[@name="CreSubjectClassification"]', :subject_tags, multivalued: true)
+    # convert with_xpath('table[@name="PhyContentAnalysis_tab"]/tuple/atom[@name="PhyContentAnalysis"]', :content_tags, multivalued: true)
+    # convert with_xpath('table[@name="CreSubjectClassification_tab"]/tuple/atom[@name="CreSubjectClassification"]', :subject_tags, multivalued: true)
   end
 end
