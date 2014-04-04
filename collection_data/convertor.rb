@@ -6,7 +6,8 @@ module CollectionData
       multivalued = opts.fetch(:multivalued, false)
 
       ->(xml, data) {
-        data[fieldname] = (multivalued ? xml.xpath(xpath).map(&:text) : xml.at_xpath(xpath).text) rescue ''
+        value = (multivalued ? xml.xpath(xpath).map(&:text) : xml.at_xpath(xpath).text) rescue nil
+        data[fieldname] = value if value
         data
       }
     end

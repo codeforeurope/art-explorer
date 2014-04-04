@@ -7,6 +7,12 @@ class CollectionItem < Hashie::Dash
       'collection_item'
     end
 
+    def index_mapping
+      { collection_item: { properties: {
+          medium: { type: 'string', index: 'not_analyzed' }
+      }}}
+    end
+
     def search(body, opts={})
       uid = opts.fetch(:uid, nil)
 
@@ -39,7 +45,7 @@ class CollectionItem < Hashie::Dash
 
     def reduce_facets!(response)
       response.facets = response.facets.reduce([]) do |memo, (k,v)|
-        memo << { title: k, options: v.terms }
+        memo << { title: k, terms: v.terms }
         memo
       end
     end

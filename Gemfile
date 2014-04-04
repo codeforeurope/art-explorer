@@ -8,6 +8,7 @@ gem 'nokogiri'
 gem 'rake'
 gem 'data_smash', path: '../data_smash'
 gem 'mongoid'
+gem 'activesupport'
 gem 'rack-cors'
 gem 'rack-contrib'
 

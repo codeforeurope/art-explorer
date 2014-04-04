@@ -15,6 +15,11 @@ namespace :data do
 
   desc "Clear data from elasticsearch"
   task :clear do
-    Elasticsearch.clear
+    CollectionData::Importer.clear_index
+  end
+
+  desc "Create the elasticsearch index"
+  task :create_index do
+    CollectionData::Importer.create_index
   end
 end

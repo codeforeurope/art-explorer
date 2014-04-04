@@ -1,0 +1,9 @@
+development:
+  host: 'localhost:9200/'
+  index: 'collection-explorer'
+production:
+  host: 'localhost:9200/'
+  index: 'collection-explorer'
+test:
+  host: 'localhost:9200/'
+  index: 'collection-explorer-test'

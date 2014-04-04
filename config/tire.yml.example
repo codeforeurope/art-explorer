@@ -1,6 +1,0 @@
-development:
-  host: 'localhost:9200'
-production:
-  host: 'mysecretlocaltion.com'
-test:
-  host: 'localhost:9200'

@@ -4,7 +4,10 @@ Bundler.require(:default)
 
 require 'csv'
 
+require 'active_support/core_ext/hash/slice'
+
 require './lib/search'
+require './lib/query_builder'
 require './models/collection_item'
 require './models/record'
 
@@ -20,28 +23,33 @@ class DataAPI < Grape::API
 
   desc 'Search the gallery collection'
   params do
-    requires :q,   type: String,  desc: 'A valid search query'
+    optional :q,   type: String,  desc: 'A valid search query', default: '*'
     optional :p,   type: Integer, desc: 'An optional page number'
     optional :pp,  type: Integer, desc: 'An optional page size'
     optional :uid, type: String,  desc: 'An optional unique identifier to retrieve tags'
+
+    # filters
+    QueryBuilder.FILTERS.each do |filter|
+      optional filter, type: String
+    end
   end
   get '/search' do
     q = params.fetch(:q)
     page = params.fetch(:p, 1)
     size = params.fetch(:pp, 10)
-    uid = params.fetch(:uid, nil)
-
     from = (page-1) * size
+    filters = params.slice(*QueryBuilder.FILTERS)
+
+    uid = params.fetch(:uid, nil)
     opts = uid ? {uid: uid} : {}
 
-    response = CollectionItem.search({
-      from: from,
+    builder = QueryBuilder.new({
+      query: q,
       size: size,
-      query: { query_string: { query: q } },
-      facets: {
-        medium: { terms: { field: 'medium', size: 999 } }
-      }
-    }, opts)
+      from: from,
+      filters: filters
+    })
+    response = CollectionItem.search(builder.query, opts)
 
     {
       total: response.total,

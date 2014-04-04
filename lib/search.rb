@@ -6,12 +6,12 @@ module Search
   end
 
   def self.config
-    YAML::load(File.read('./config/tire.yml'))[rack_env]
+    YAML::load(File.read('./config/elasticsearch.yml'))[rack_env]
   end
 
   def self.client
-    # Elasticsearch::Client.new(host: Search.config['host'], trace: true, logger: DataAPI.logger)
-    Elasticsearch::Client.new(host: Search.config['host'])
+    Elasticsearch::Client.new(host: Search.config['host'], trace: true, logger: DataAPI.logger)
+    # Elasticsearch::Client.new(host: Search.config['host'])
   end
 
   def self.search(opts)
@@ -37,8 +37,9 @@ module Search
     client.indices.delete index: Search.config['index'] rescue nil # ignore error if index doesn't exist
   end
 
-  def self.create_index
-    client.indices.create index: Search.config['index']
+  def self.create_index(opts)
+    body = opts.fetch(:body)
+    client.indices.create index: Search.config['index'], body: body
   end
 
   def self.refresh

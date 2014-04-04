@@ -23,6 +23,18 @@ module CollectionData
       logger.info "Imported #{data.length} records"
     end
 
+    class << self
+      def clear_index
+        Search.clear
+      end
+
+      def create_index
+        Search.create_index(body: {
+          mappings: {}.merge(CollectionItem.index_mapping)
+        })
+      end
+    end
+
     private
 
     def is_item_node?(xml_fragment)

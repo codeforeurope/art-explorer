@@ -48,7 +48,7 @@ describe DataAPI do
       end
     end
 
-    context 'given an IRN with associated tags' do
+    context 'given a uid with associated tags' do
       let(:uid) { 'abcd' }
       let(:tags) { ['foo', 'bar'] }
       before { Record.create(irn: collection_item.irn, uid: uid, tags: tags) }
@@ -58,6 +58,20 @@ describe DataAPI do
         json = JSON.parse(last_response.body)
         item = json['items'][0]
         item['tags'].should == tags
+      end
+    end
+
+    context 'given a filter' do
+      it 'should return results matching the given filter' do
+        get '/search', medium: 'hat'
+        json = JSON.parse(last_response.body)
+        json['total'].should == 1
+      end
+
+      it 'should not return results which do not match the given filter' do
+        get '/search', medium: 'trouser'
+        json = JSON.parse(last_response.body)
+        json['total'].should == 0
       end
     end
   end
