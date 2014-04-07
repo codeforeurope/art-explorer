@@ -1,5 +1,5 @@
 .DS_Store
 tmp
-log
+log/*.log
 all-data.xml
 config/tire.yml
