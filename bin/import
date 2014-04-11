@@ -1,0 +1,4 @@
+#!/bin/bash
+./bin/configure
+bundle exec rake data:create_index
+bundle exec rake data:import

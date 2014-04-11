@@ -1,0 +1,3 @@
+#!/bin/bash
+./bin/configure
+bundle exec unicorn
