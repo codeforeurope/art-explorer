@@ -9,8 +9,7 @@ namespace :data do
     args.with_defaults(file: 'all-data.xml')
 
     file = args.file
-    importer = CollectionData::Importer.new(file)
-    importer.import
+    CollectionData::Importer.import(file)
   end
 
   desc "Clear data from elasticsearch"

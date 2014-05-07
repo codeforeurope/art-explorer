@@ -9,7 +9,7 @@ describe CollectionItem do
   let(:search_response) { CollectionItem.search(query) }
 
   before do
-    CollectionData::Importer.new('spec/support/example_data.xml').import
+    CollectionData::Importer.import('spec/support/example_data.xml')
     Search.refresh
   end
 

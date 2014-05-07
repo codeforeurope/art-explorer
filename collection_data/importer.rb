@@ -1,26 +1,24 @@
 module CollectionData
   class Importer
-    attr_accessor :filename
-
-    def initialize(filename)
-      self.filename = filename
+    def initialize(converter)
+      @converter = converter
+      @buffer = []
     end
 
-    def import
-      file = File.open(self.filename, 'r')
+    def import(filename)
+      file = File.open(filename, 'r')
       reader = Nokogiri::XML::Reader(file)
-      convertor = CollectionData::Convertor.new
-      data = []
       reader.each do |node|
         fragment = Nokogiri::XML.fragment(node.inner_xml)
         next unless is_item_node?(fragment) # skip unless node is an object to import
-
-        data << convertor.convert(fragment)
-        logger.info '.'
+        process(fragment)
+        flush if flush?
       end
-      logger.info "Importing..."
-      Search.bulk_index(data, type: CollectionItem.index_type)
-      logger.info "Imported #{data.length} records"
+      flush unless @buffer.empty?
+    end
+
+    def process(fragment)
+      @buffer << @converter.convert(fragment)
     end
 
     class << self
@@ -33,12 +31,28 @@ module CollectionData
           mappings: {}.merge(CollectionItem.index_mapping)
         })
       end
+
+      def import(filename)
+        converter = Converter.new
+        importer = Importer.new(converter)
+        importer.import(filename)
+      end
     end
 
     private
 
     def is_item_node?(xml_fragment)
       !!xml_fragment.at_xpath('atom[@name="TitAccessionNo"]')
+    end
+
+    def flush?
+      (@buffer.size >= 1000)
+    end
+
+    def flush
+      logger.info "Importing #{@buffer.length} records"
+      Search.bulk_index(@buffer, type: CollectionItem.index_type, id: :accession_number)
+      @buffer = []
     end
 
     def logger

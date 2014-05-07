@@ -1,5 +1,5 @@
 module CollectionData
-  class Convertor
+  class Converter
     include DataSmash::Convertor
 
     def self.with_xpath(xpath, fieldname, opts={})

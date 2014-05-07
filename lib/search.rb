@@ -25,20 +25,25 @@ module Search
 
   def self.bulk_index(data, opts)
     type = opts.fetch(:type)
+    id_field = opts.fetch(:id)
 
     base_opts = {
       _index: Search.config['index'],
       _type: type
     }
-    client.bulk body: data.map{|d| { index: base_opts.merge(_id: SecureRandom.uuid, data: d)} }
+    body = data.map do |d|
+      id = id_field ? d[id_field] : SecureRandom.uuid
+      { index: base_opts.merge(_id: id, data: d)}
+    end
+    client.bulk body: body
   end
 
   def self.clear
     client.indices.delete index: Search.config['index'] rescue nil # ignore error if index doesn't exist
   end
 
-  def self.create_index(opts)
-    body = opts.fetch(:body)
+  def self.create_index(opts={})
+    body = opts.fetch(:body, {})
     client.indices.create index: Search.config['index'], body: body
   end
 
