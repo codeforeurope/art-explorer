@@ -7,7 +7,6 @@ gem 'hashie'
 gem 'nokogiri'
 gem 'rake'
 gem 'data_smash'
-gem 'mongoid'
 gem 'activesupport'
 gem 'rack-cors'
 gem 'rack-contrib'
@@ -19,7 +18,6 @@ end
 group :test do
   gem 'rspec'
   gem 'rack-test', require: 'rack/test'
-  gem 'database_cleaner'
 end
 
 group :production do

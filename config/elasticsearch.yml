@@ -1,6 +1,6 @@
 development:
   host: 'localhost:9200/'
-  index: 'collection-explorer'
+  index: 'collection-explorer-dev'
 production:
   host: 'localhost:9200/'
   index: 'collection-explorer'

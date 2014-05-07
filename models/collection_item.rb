@@ -13,34 +13,21 @@ class CollectionItem < Hashie::Dash
       }}}
     end
 
-    def search(body, opts={})
-      uid = opts.fetch(:uid, nil)
-
+    def search(body)
       response = Search.search(body: body, type: index_type)
       response.results.map!{|r| CollectionItem.from_result(r) }
       reduce_facets!(response) if response.facets
-      add_tags!(response, uid) if uid
       response
     end
 
-    def find(irn, opts={})
-      response = self.search({ query: { match: { irn: irn }}}, opts)
+    def find(irn)
+      response = self.search({ query: { match: { irn: irn }}})
       raise RecordNotFound.new('Could not find the record with the given IRN') if response.total != 1
       response.results.first
     end
 
     def from_result(result)
       CollectionItem.new(result._source)
-    end
-
-    def add_tags!(response, uid)
-      irns = response.results.map(&:irn)
-      records = Record.where(uid: uid).in(irn: irns)
-      response.results.map! do |result|
-        record = records.detect{|r| r.irn == result.irn}
-        result.tags = record.tags if record
-        result
-      end
     end
 
     def reduce_facets!(response)
@@ -81,13 +68,4 @@ class CollectionItem < Hashie::Dash
   property :tags
   property :content_tags
   property :subject_tags
-
-  def tag(uid, tags_string)
-    record = Record.find_or_create_by(irn: self.irn, uid: uid)
-    record.update_tags(tags_string)
-  end
-
-  def untag(uid)
-    Record.where(uid: uid).delete
-  end
 end

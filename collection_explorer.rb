@@ -9,14 +9,11 @@ require 'active_support/core_ext/hash/slice'
 require './lib/search'
 require './lib/query_builder'
 require './models/collection_item'
-require './models/record'
-
-Mongoid.load!(File.expand_path("config/mongoid.yml"))
 
 class DataAPI < Grape::API
   use Rack::JSONP
 
-  version 'v1', using: :header, vendor: 'manchesterartgallery'
+  version 'v1', using: :header, vendor: 'manchestergalleries'
   format :json
 
   logger Logger.new('log/app.log')
@@ -26,7 +23,6 @@ class DataAPI < Grape::API
     optional :q,   type: String,  desc: 'A valid search query', default: '*'
     optional :p,   type: Integer, desc: 'An optional page number'
     optional :pp,  type: Integer, desc: 'An optional page size'
-    optional :uid, type: String,  desc: 'An optional unique identifier to retrieve tags'
 
     # filters
     QueryBuilder.FILTERS.each do |filter|
@@ -40,16 +36,13 @@ class DataAPI < Grape::API
     from = (page-1) * size
     filters = params.slice(*QueryBuilder.FILTERS)
 
-    uid = params.fetch(:uid, nil)
-    opts = uid ? {uid: uid} : {}
-
     builder = QueryBuilder.new({
       query: q,
       size: size,
       from: from,
       filters: filters
     })
-    response = CollectionItem.search(builder.query, opts)
+    response = CollectionItem.search(builder.query)
 
     {
       total: response.total,
@@ -62,7 +55,7 @@ class DataAPI < Grape::API
     CollectionItem.find(params[:irn])
   end
 
-  rescue_from CollectionItem::RecordNotFound, Record::MalformedTags do |e|
+  rescue_from CollectionItem::RecordNotFound do |e|
     Rack::Response.new([ e.message ], 400)
   end
 
@@ -70,25 +63,6 @@ class DataAPI < Grape::API
     def collection_item!
       @collection_item = CollectionItem.find(params[:irn])
     end
-  end
-
-  desc 'Attach a set of comma-separated tags to a collection item with given IRN'
-  params do
-    requires :uid,  type: String, desc: 'A unique identifier for you or your app'
-    requires :tags, type: String, desc: 'A comma-separated list of tags e.g. foo,bar,baz'
-  end
-  post '/:irn/tags' do
-    collection_item!
-    @collection_item.tag(params[:uid], params[:tags])
-  end
-
-  desc 'Remove all tags from a collection item with given IRN'
-  params do
-    requires :uid,  type: String, desc: 'A unique identifier for you or your app'
-  end
-  delete '/:irn/tags' do
-    collection_item!
-    @collection_item.untag(params[:uid])
   end
 end
 

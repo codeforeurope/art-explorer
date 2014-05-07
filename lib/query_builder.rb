@@ -1,6 +1,11 @@
 class QueryBuilder
-  cattr_accessor :FILTERS
-  @@FILTERS = [:medium]
+  class << self
+    @@_FILTERS = [:medium]
+
+    def FILTERS
+      @@_FILTERS
+    end
+  end
 
   def initialize(opts)
     @query = opts.fetch(:query)
