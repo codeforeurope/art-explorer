@@ -51,7 +51,7 @@ module CollectionData
 
     def flush
       logger.info "Importing #{@buffer.length} records"
-      Search.bulk_index(@buffer, type: CollectionItem.index_type, id: :accession_number)
+      Search.bulk_index(@buffer, type: CollectionItem.index_type, id: :identifier)
       @buffer = []
     end
 

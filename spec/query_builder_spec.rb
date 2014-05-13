@@ -14,7 +14,7 @@ describe QueryBuilder do
       it 'should build the correct elasticsearch query' do
         builder.query.should == {
           query: {query_string: {query: "foo"}},
-          facets: {medium: {terms: {field: "medium", size: 999}}},
+          facets: {type: {terms: {field: "type", size: 999}}, subject: {terms: {field: "subject", size: 999}}},
           from: 0,
           size: 100
         }
@@ -27,7 +27,7 @@ describe QueryBuilder do
 
     context 'filtered' do
       let(:titles) { ['bar', 'baz'] }
-      let(:terms) { { title: titles.join(', '), medium: 'boo' } }
+      let(:terms) { { title: titles.join(', '), type: 'boo' } }
       let(:builder) {
         QueryBuilder.new({
           query: 'foo',

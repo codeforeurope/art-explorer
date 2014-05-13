@@ -10,6 +10,8 @@ gem 'data_smash'
 gem 'activesupport'
 gem 'rack-cors'
 gem 'rack-contrib'
+gem 'rubyzip', require: 'zip'
+gem 'ruby-vips', require: 'vips'
 
 group :development do
   gem 'grape_doc'

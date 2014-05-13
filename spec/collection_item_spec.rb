@@ -29,13 +29,13 @@ describe CollectionItem do
   end
 
   describe '.find' do
-    it 'should return the record matching the given IRN' do
-      CollectionItem.find('123456').should == collection_item
+    it 'should return the record matching the given accession number' do
+      CollectionItem.find('1961.142').should == collection_item
     end
 
     context 'given a non-existent IRN' do
       it 'should raise a RecordNotFound exception' do
-        expect{ CollectionItem.find('098765') }.to raise_error(CollectionItem::RecordNotFound)
+        expect{ CollectionItem.find('1234.5678') }.to raise_error(CollectionItem::RecordNotFound)
       end
     end
   end

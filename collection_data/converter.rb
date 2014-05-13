@@ -12,32 +12,38 @@ module CollectionData
       }
     end
 
-    convert with_xpath('atom[@name="irn"]', :irn)
-    convert with_xpath('atom[@name="TitAccessionNo"]', :accession_number)
-    convert with_xpath('table[@name="Group1"]/tuple/atom[@name="NamFirst"]', :first_name)
-    convert with_xpath('table[@name="Group1"]/tuple/atom[@name="NamMiddle"]', :middle_name)
-    convert with_xpath('table[@name="Group1"]/tuple/atom[@name="NamLast"]', :last_name)
-    convert with_xpath('table[@name="Group1"]/tuple/atom[@name="NamSuffix"]', :suffix)
-    convert with_xpath('table[@name="Group1"]/tuple/atom[@name="NamFullName"]', :fullname)
-    convert with_xpath('table[@name="Group1"]/tuple/atom[@name="NamOrganisation"]', :organisation)
-    convert with_xpath('table[@name="Group1"]/tuple/atom[@name="CreRole"]', :role)
-    convert with_xpath('table[@name="Group2"]/tuple/atom[@name="CreDateCreated"]', :created_on)
-    convert with_xpath('table[@name="Group2"]/tuple/atom[@name="CreEarliestDate"]', :earliest_created_on)
-    convert with_xpath('table[@name="Group2"]/tuple/atom[@name="CreLatestDate"]', :latest_created_on)
-    convert with_xpath('atom[@name="TitObjectName"]', :object_name)
+    convert with_xpath('atom[@name="TitAccessionNo"]', :identifier)
     convert with_xpath('atom[@name="TitMainTitle"]', :title)
-    convert with_xpath('atom[@name="TitSeriesTitle"]', :series_title)
-    convert with_xpath('atom[@name="TitCollectionTitle"]', :collection_title)
-    convert with_xpath('table[@name="PhyMedium_tab"]/tuple/atom[@name="PhyMedium"]', :medium)
-    convert with_xpath('atom[@name="PhySupport"]', :support)
-    convert with_xpath('table[@name="Group3"]/tuple/atom[@name="PhyType"]', :physical_type)
-    convert with_xpath('table[@name="Group3"]/tuple/atom[@name="PhyHeight"]', :height)
-    convert with_xpath('table[@name="Group3"]/tuple/atom[@name="PhyWidth"]', :width)
-    convert with_xpath('table[@name="Group3"]/tuple/atom[@name="PhyUnitLength"]', :unit)
+    convert with_xpath('table[@name="Group1"]/tuple/atom[@name="NamFullName"]', :creator)
     convert with_xpath('atom[@name="PhyDescription"]', :description)
+    convert with_xpath('table[@name="TitCollectionGroup_tab"]/tuple/atom[@name="TitCollectionGroup"]', :subject, multivalued: true)
+    convert ->(xml, data) {
+      start_date = xml.at_xpath('table[@name="Group2"]/tuple/atom[@name="CreEarliestDate"]')
+      end_date =   xml.at_xpath('table[@name="Group2"]/tuple/atom[@name="CreLatestDate"]')
 
-    # convert with_xpath('table[@name="TitCollectionGroup_tab"]/tuple/atom[@name="TitCollectionGroup"]', :tags, multivalued: true)
-    # convert with_xpath('table[@name="PhyContentAnalysis_tab"]/tuple/atom[@name="PhyContentAnalysis"]', :content_tags, multivalued: true)
-    # convert with_xpath('table[@name="CreSubjectClassification_tab"]/tuple/atom[@name="CreSubjectClassification"]', :subject_tags, multivalued: true)
+      data[:date] = {}
+      data[:date][:start] = start_date.text if start_date
+      data[:date][:end] = end_date.text if end_date
+      data
+    }
+    convert ->(xml,data) {
+      data[:title] ||= xml.at_xpath('atom[@name="TitObjectName"]').text
+      data
+    }
+    convert ->(xml, data) {
+      type = xml.at_xpath('table[@name="PhyTechnique_tab"]/tuple/atom[@name="PhyTechnique"]')
+      data[:type] = type.text.split(',').map(&:strip) if type
+      data
+    }
+    convert ->(xml, data) {
+      data[:subject] ||= []
+      data[:subject] << xml.xpath('table[@name="CreSubjectClassification_tab"]/tuple/atom[@name="CreSubjectClassification"]').map(&:text)
+      data
+    }
+    convert ->(xml, data) {
+      place_name = xml.xpath('table[@name="Group3"]/tuple/atom').map(&:text).join(', ')
+      data[:coverage] = { placeName: place_name }
+      data
+    }
   end
 end

@@ -1,6 +1,6 @@
 class QueryBuilder
   class << self
-    @@_FILTERS = [:medium]
+    @@_FILTERS = [:type, :subject]
 
     def FILTERS
       @@_FILTERS
