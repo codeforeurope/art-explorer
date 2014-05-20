@@ -46,4 +46,5 @@ class CollectionItem < Hashie::Dash
   property :type
   property :subject
   property :coverage      # just placename for now
+  property :images        # an array of images
 end

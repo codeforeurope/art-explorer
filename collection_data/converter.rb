@@ -45,5 +45,16 @@ module CollectionData
       data[:coverage] = { placeName: place_name }
       data
     }
+    convert ->(xml,data) {
+      xml.xpath('table[@name="MulMultiMediaRef_tab"]/tuple').each do |node|
+        next unless node.at_xpath('atom[@name="AdmPublishWebNoPassword"]').text == 'Yes'
+        data[:images] ||= []
+        path = node.at_xpath('atom[@name="Multimedia"]').text
+        path.gsub!(/jpg|JPG|tif|TIF/, 'jpg')
+        url = "http://data.manchestergalleries.asacalow.me/assets/#{path}"
+        data[:images] << url
+      end
+      data
+    }
   end
 end

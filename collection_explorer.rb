@@ -51,8 +51,9 @@ class DataAPI < Grape::API
     }
   end
 
-  get '/:irn' do
-    CollectionItem.find(params[:irn])
+  get %r{/item/[\d\/\.]+} do |id|
+    puts "eyedeeee: #{id}"
+    CollectionItem.find(id)
   end
 
   rescue_from CollectionItem::RecordNotFound do |e|
@@ -69,6 +70,7 @@ end
 class CollectionExplorer < Sinatra::Base
   configure :production, :development do
     enable :logging
+    set :base_url, 'http://data.manchestergalleries.asacalow.me'
   end
 
   get '/' do

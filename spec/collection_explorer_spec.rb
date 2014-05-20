@@ -6,7 +6,7 @@ describe DataAPI do
     Search.refresh
   end
 
-  let(:collection_item) { CollectionItem.find('123456') }
+  let(:collection_item) { CollectionItem.find('1961.142') }
 
   describe 'GET /search' do
     it 'should return the total no. of results' do
@@ -25,7 +25,7 @@ describe DataAPI do
       get '/search', q: '*'
       json = JSON.parse(last_response.body)
       facet = json['facets'][0]
-      facet['title'].should == 'medium'
+      facet['title'].should == 'type'
     end
 
     context 'given a page size' do
@@ -51,27 +51,29 @@ describe DataAPI do
 
     context 'given a filter' do
       it 'should return results matching the given filter' do
-        get '/search', medium: 'hat'
+        get '/search', type: 'plaited'
         json = JSON.parse(last_response.body)
         json['total'].should == 1
       end
 
       it 'should not return results which do not match the given filter' do
-        get '/search', medium: 'trouser'
+        get '/search', type: 'welded'
         json = JSON.parse(last_response.body)
         json['total'].should == 0
       end
     end
   end
 
-  describe 'GET /:irn' do
+  describe 'GET /:id' do
     it 'should respond successfully' do
-      get collection_item.irn
+      puts "/item/#{collection_item.identifier}"
+      get "/item/#{collection_item.identifier}"
+      puts last_response.inspect
       last_response.status.should == 200
     end
 
     it 'should return the collection item as JSON' do
-      get collection_item.irn
+      get collection_item.identifier
       json = JSON.parse(last_response.body)
       json.should == collection_item
     end
