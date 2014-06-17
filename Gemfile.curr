@@ -12,10 +12,15 @@ gem 'rack-cors'
 gem 'rack-contrib'
 gem 'rubyzip', require: 'zip'
 gem 'ruby-vips', require: 'vips'
+gem 'rerun'
+gem 'rack-attack'
+gem 'dalli'
 gem 'sentry-raven'
 
 group :development do
   gem 'grape_doc'
+  gem 'jekyll'
+  gem 'compass'
 end
 
 group :test do

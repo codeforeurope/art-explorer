@@ -1,4 +1,5 @@
 require 'yaml'
+require 'erb'
 
 module Search
   def self.rack_env
@@ -6,7 +7,7 @@ module Search
   end
 
   def self.config
-    YAML::load(File.read('./config/elasticsearch.yml'))[rack_env]
+    YAML::load(ERB.new(File.read('./config/elasticsearch.yml')).result)[rack_env]
   end
 
   def self.client

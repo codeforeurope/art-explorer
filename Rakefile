@@ -4,18 +4,14 @@ Bundler.require(:default)
 require './collection_data'
 
 namespace :data do
-  desc "Extract data from a zip file containing data & images"
-  task :extract, :file, :out_path do |t, args|
-    args.with_defaults(file: 'data.zip', out_path: 'public/assets/images')
-    CollectionData::Extracter.extract(file: args.file, out_path: args.out_path)
-  end
-
-  desc "Import data from KE xml dump into elaticsearch"
-  task :import, :file do |t, args|
-    args.with_defaults(file: 'data.xml')
-
-    file = args.file
-    CollectionData::Importer.import(file)
+  desc "Extract and import data from a KE data dump."
+  task :import, :folder do |t, args|
+    file = nil
+    Dir.glob("#{args.folder}/*.zip") do |f|
+      file = f
+    end
+    CollectionData::Extracter.extract(file: file, out_path: 'public/assets/images')
+    CollectionData::Importer.import('data.xml')
   end
 
   desc "Clear data from elasticsearch"

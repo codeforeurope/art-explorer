@@ -51,8 +51,7 @@ module CollectionData
         data[:images] ||= []
         path = node.at_xpath('atom[@name="Multimedia"]').text
         path.gsub!(/jpg|JPG|tif|TIF/, 'jpg')
-        url = "http://data.manchestergalleries.asacalow.me/assets/#{path}"
-        data[:images] << url
+        data[:images] << path
       end
       data
     }

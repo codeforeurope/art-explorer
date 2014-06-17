@@ -1,5 +1,4 @@
 .DS_Store
-tmp
+tmp/always_restart.txt
 log/*.log
 all-data.xml
-config/tire.yml
