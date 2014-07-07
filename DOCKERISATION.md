@@ -11,3 +11,7 @@
 # Now fire up the service
 
     $ docker run -d --link elasticsearch:elasticsearch  --volumes-from images -p 80:80 --name api codeforeurope/api
+
+(Run it on the box like this:)
+
+sudo nohup docker run --link elasticsearch:elasticsearch --volumes-from images -v /home/emu:/data codeforeurope/api bundle exec rake data:import[/data] &

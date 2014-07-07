@@ -19,11 +19,17 @@ module CollectionData
     convert with_xpath('table[@name="TitCollectionGroup_tab"]/tuple/atom[@name="TitCollectionGroup"]', :subject, multivalued: true)
     convert ->(xml, data) {
       start_date = xml.at_xpath('table[@name="Group2"]/tuple/atom[@name="CreEarliestDate"]')
-      end_date =   xml.at_xpath('table[@name="Group2"]/tuple/atom[@name="CreLatestDate"]')
-
-      data[:date] = {}
-      data[:date][:start] = start_date.text if start_date
-      data[:date][:end] = end_date.text if end_date
+      data[:earliest] = start_date.text.to_i if start_date
+      data
+    }
+    convert ->(xml,data) {
+      end_date = xml.at_xpath('table[@name="Group2"]/tuple/atom[@name="CreLatestDate"]')
+      data[:latest] = end_date.text if end_date
+      data
+    }
+    convert ->(xml, data) {
+      data[:latest] ||= data[:earliest]
+      data[:earliest] ||= data[:latest]
       data
     }
     convert ->(xml,data) {
@@ -47,7 +53,7 @@ module CollectionData
     }
     convert ->(xml,data) {
       xml.xpath('table[@name="MulMultiMediaRef_tab"]/tuple').each do |node|
-        next unless node.at_xpath('atom[@name="AdmPublishWebNoPassword"]').text == 'Yes'
+        next unless node.at_xpath('atom[@name="AdmPublishWebNoPassword"]').try(:text) == 'Yes'
         data[:images] ||= []
         path = node.at_xpath('atom[@name="Multimedia"]').text
         path.gsub!(/jpg|JPG|tif|TIF/, 'jpg')

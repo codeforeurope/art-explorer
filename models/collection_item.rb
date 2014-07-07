@@ -4,12 +4,11 @@ class CollectionItem < Hashie::Dash
   class << self
 
     def index_type
-      'collection_item'
+      'collection-item'
     end
 
     def index_mapping
-      { collection_item: { properties: {
-      }}}
+      { 'collection-item' => { properties: {} } }
     end
 
     def search(body)
@@ -20,9 +19,12 @@ class CollectionItem < Hashie::Dash
     end
 
     def find(accession_number)
-      response = self.search({ query: { match: { identifier: accession_number }}})
-      raise RecordNotFound.new('Could not find the record with the given accession number') if response.total != 1
-      response.results.first
+      begin
+        response = Search.get(accession_number, type: index_type)
+        return CollectionItem.from_result(response)
+      rescue Search::RecordNotFound => e
+        raise RecordNotFound.new('Could not find the record with the given accession number')
+      end
     end
 
     def from_result(result)
@@ -38,8 +40,9 @@ class CollectionItem < Hashie::Dash
   end
 
   property :identifier    # accession no.
-  property :date          # hash, incorporating start & end values
   property :description
+  property :earliest
+  property :latest
   property :format
   property :creator
   property :title

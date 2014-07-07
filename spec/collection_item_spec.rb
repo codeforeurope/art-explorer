@@ -30,7 +30,7 @@ describe CollectionItem do
 
   describe '.find' do
     it 'should return the record matching the given accession number' do
-      CollectionItem.find('1961.142').should == collection_item
+      CollectionItem.find('1961.142/1A').should == collection_item
     end
 
     context 'given a non-existent IRN' do

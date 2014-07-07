@@ -6,7 +6,7 @@ describe DataAPI do
     Search.refresh
   end
 
-  let(:collection_item) { CollectionItem.find('1961.142') }
+  let(:collection_item) { CollectionItem.find('1961.142/1A') }
 
   describe 'GET /search' do
     it 'should return the total no. of results' do
@@ -49,7 +49,7 @@ describe DataAPI do
       # end
     end
 
-    context 'given a filter' do
+    context 'given a term filter' do
       it 'should return results matching the given filter' do
         get '/search', type: 'plaited'
         json = JSON.parse(last_response.body)
@@ -62,20 +62,39 @@ describe DataAPI do
         json['total'].should == 0
       end
     end
+
+    context 'given a range filter' do
+      it 'should return results within the range' do
+        get '/search', earliest: '1922', latest: '1922'
+        json = JSON.parse(last_response.body)
+        json['total'].should == 1
+      end
+
+      it 'should not return results within the range' do
+        get '/search', earliest: '1918', latest: '1918'
+        json = JSON.parse(last_response.body)
+        json['total'].should == 0
+      end
+    end
   end
 
-  describe 'GET /:id' do
+  describe 'GET /i/:id' do
     it 'should respond successfully' do
-      puts "/item/#{collection_item.identifier}"
-      get "/item/#{collection_item.identifier}"
-      puts last_response.inspect
+      get "/i/#{collection_item.identifier}"
       last_response.status.should == 200
     end
 
     it 'should return the collection item as JSON' do
-      get collection_item.identifier
+      get "/i/#{collection_item.identifier}"
       json = JSON.parse(last_response.body)
       json.should == collection_item
+    end
+
+    context 'given a non-existent ID' do
+      it 'should respond with a 404' do
+        get '/i/1234.5678/9'
+        last_response.status.should == 404
+      end
     end
   end
 end

@@ -19,27 +19,6 @@ describe QueryBuilder do
           size: 100
         }
       end
-
-      it 'should not contain a filter block' do
-        builder.query[:filter].should be_nil
-      end
-    end
-
-    context 'filtered' do
-      let(:titles) { ['bar', 'baz'] }
-      let(:terms) { { title: titles.join(', '), type: 'boo' } }
-      let(:builder) {
-        QueryBuilder.new({
-          query: 'foo',
-          from: 0,
-          size: 100,
-          filters: terms
-        })
-      }
-
-      it 'should include appropriate elasticsearch filters' do
-        builder.query[:filter][:terms][:title].should == titles
-      end
     end
   end
 end

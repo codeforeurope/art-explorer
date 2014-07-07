@@ -18,14 +18,14 @@ class DataAPI < Grape::API
 
   logger Logger.new('log/app.log')
 
-  desc 'Search the gallery collection'
+  desc 'Search the gallery collection.'
   params do
     optional :q,   type: String,  desc: 'A valid search query', default: '*'
     optional :p,   type: Integer, desc: 'An optional page number'
     optional :pp,  type: Integer, desc: 'An optional page size'
 
     # filters
-    QueryBuilder.FILTERS.each do |filter|
+    (QueryBuilder.TERM_FILTERS && QueryBuilder.RANGE_FILTERS).each do |filter|
       optional filter, type: String
     end
   end
@@ -34,13 +34,15 @@ class DataAPI < Grape::API
     page = params.fetch(:p, 1)
     size = params.fetch(:pp, 10)
     from = (page-1) * size
-    filters = params.slice(*QueryBuilder.FILTERS)
+    term_filters = params.slice(*QueryBuilder.TERM_FILTERS)
+    range_filters = params.slice(*QueryBuilder.RANGE_FILTERS)
 
     builder = QueryBuilder.new({
       query: q,
       size: size,
       from: from,
-      filters: filters
+      term_filters: term_filters,
+      range_filters: range_filters
     })
     response = CollectionItem.search(builder.query)
 
@@ -51,21 +53,21 @@ class DataAPI < Grape::API
     }
   end
 
-  get %r{/item/[\d\/\.]+} do |id|
-    puts "eyedeeee: #{id}"
+  rescue_from CollectionItem::RecordNotFound do |e|
+    Rack::Response.new([ e.message ], 404)
+  end
+
+  desc 'Get an individual record.'
+  params do
+    requires :id, type: String, desc: 'The accession number of the record'
+  end
+  get '/i/:id', requirements: {id: /[\w\/\.]+/} do
+    id = params[:id]
     CollectionItem.find(id)
   end
-
-  rescue_from CollectionItem::RecordNotFound do |e|
-    Rack::Response.new([ e.message ], 400)
-  end
-
-  helpers do
-    def collection_item!
-      @collection_item = CollectionItem.find(params[:irn])
-    end
-  end
 end
+
+puts DataAPI.routes.inspect
 
 class CollectionExplorer < Sinatra::Base
   configure :production, :development do

@@ -2,6 +2,8 @@ require 'yaml'
 require 'erb'
 
 module Search
+  class RecordNotFound < StandardError;; end
+
   def self.rack_env
     ENV['RACK_ENV'] || 'development'
   end
@@ -13,6 +15,17 @@ module Search
   def self.client
     Elasticsearch::Client.new(host: Search.config['host'], trace: true, logger: DataAPI.logger)
     # Elasticsearch::Client.new(host: Search.config['host'])
+  end
+
+  def self.get(id, opts)
+    type = opts.fetch(:type)
+    begin
+      response = client.get index: Search.config['index'], type: type, id: id
+      mash = Hashie::Mash.new response
+      return mash
+    rescue Elasticsearch::Transport::Transport::Errors::NotFound => e
+      raise RecordNotFound.new("The record with ID #{id} was not found.")
+    end
   end
 
   def self.search(opts)

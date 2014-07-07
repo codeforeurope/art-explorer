@@ -1,0 +1,4 @@
+Raven.configure do |config|
+  config.dsn = 'https://your-sentry-dsn-here.com'
+  config.environments = %w[ production ]
+end

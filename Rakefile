@@ -2,6 +2,7 @@ require 'rubygems'
 require 'bundler'
 Bundler.require(:default)
 require './collection_data'
+require './init/raven'
 
 namespace :data do
   desc "Extract and import data from a KE data dump."
@@ -10,8 +11,11 @@ namespace :data do
     Dir.glob("#{args.folder}/*.zip") do |f|
       file = f
     end
-    CollectionData::Extracter.extract(file: file, out_path: 'public/assets/images')
-    CollectionData::Importer.import('data.xml')
+
+    Raven.capture do
+      CollectionData::Extracter.extract(file: file, out_path: 'public/assets/images')
+      CollectionData::Importer.import('data.xml')
+    end
   end
 
   desc "Clear data from elasticsearch"

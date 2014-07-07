@@ -2,7 +2,7 @@
 <table name="ecatalogue">
   <tuple>
     <atom name="irn">123456</atom>
-    <atom name="TitAccessionNo">1961.142</atom>
+    <atom name="TitAccessionNo">1961.142/1A</atom>
     <table name="Group1">
       <tuple>
         <atom name="NamFirst">John</atom>

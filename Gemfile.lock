@@ -47,6 +47,7 @@ GEM
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     nokogiri (1.5.10)
+    patron (0.4.18)
     rack (1.5.2)
     rack-accept (0.4.5)
       rack (>= 0.4)
@@ -103,6 +104,7 @@ DEPENDENCIES
   grape_doc
   hashie
   nokogiri
+  patron
   rack-contrib
   rack-cors
   rack-test
