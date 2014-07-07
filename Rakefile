@@ -12,6 +12,8 @@ namespace :data do
       file = f
     end
 
+    raise Exception.new('.zip file not found at the given location') unless file
+
     Raven.capture do
       CollectionData::Extracter.extract(file: file, out_path: 'public/assets/images')
       CollectionData::Importer.import('data.xml')

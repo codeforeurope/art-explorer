@@ -67,8 +67,6 @@ class DataAPI < Grape::API
   end
 end
 
-puts DataAPI.routes.inspect
-
 class CollectionExplorer < Sinatra::Base
   configure :production, :development do
     enable :logging
