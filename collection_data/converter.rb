@@ -7,7 +7,7 @@ module CollectionData
 
       ->(xml, data) {
         value = (multivalued ? xml.xpath(xpath).map(&:text) : xml.at_xpath(xpath).text) rescue nil
-        data[fieldname] = value if value
+        data[fieldname] = value if value.present?
         data
       }
     end
@@ -19,17 +19,23 @@ module CollectionData
     convert with_xpath('table[@name="TitCollectionGroup_tab"]/tuple/atom[@name="TitCollectionGroup"]', :subject, multivalued: true)
     convert ->(xml, data) {
       start_date = xml.at_xpath('table[@name="Group2"]/tuple/atom[@name="CreEarliestDate"]')
-      data[:earliest] = start_date.text.to_i if start_date
+      if start_date
+        date = start_date.text.to_i
+        data[:earliest] = date if date > 0
+      end
       data
     }
     convert ->(xml,data) {
       end_date = xml.at_xpath('table[@name="Group2"]/tuple/atom[@name="CreLatestDate"]')
-      data[:latest] = end_date.text if end_date
+      if end_date
+        date = end_date.text.to_i
+        data[:latest] = date if date > 0
+      end
       data
     }
     convert ->(xml, data) {
-      data[:latest] ||= data[:earliest]
-      data[:earliest] ||= data[:latest]
+      data[:latest] ||= data[:earliest] if data[:earliest]
+      data[:earliest] ||= data[:latest] if data[:latest]
       data
     }
     convert ->(xml,data) {
@@ -43,12 +49,13 @@ module CollectionData
     }
     convert ->(xml, data) {
       data[:subject] ||= []
-      data[:subject] << xml.xpath('table[@name="CreSubjectClassification_tab"]/tuple/atom[@name="CreSubjectClassification"]').map(&:text)
+      subjects = xml.xpath('table[@name="CreSubjectClassification_tab"]/tuple/atom[@name="CreSubjectClassification"]').map(&:text)
+      data[:subject].concat(subjects)
       data
     }
     convert ->(xml, data) {
-      place_name = xml.xpath('table[@name="Group3"]/tuple/atom').map(&:text).join(', ')
-      data[:coverage] = { placeName: place_name }
+      place_name = xml.xpath('table[@name="Group4"]/tuple/atom').map(&:text).join(', ')
+      data[:coverage] = { placename: place_name } if place_name
       data
     }
     convert ->(xml,data) {
