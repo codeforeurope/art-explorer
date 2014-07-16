@@ -16,17 +16,19 @@ class QueryBuilder
     @query = opts.fetch(:query)
     @size = opts.fetch(:size)
     @from = opts.fetch(:from)
+    @facets = opts.fetch(:facets, [])
     @term_filters = opts.fetch(:term_filters, {})
     @range_filters = opts.fetch(:range_filters, {})
+    @images = opts.fetch(:images, false)
   end
 
   def query
     query = {
       query: { query_string: { query: @query } },
-      facets: facets,
       from: @from,
       size: @size
     }
+    query[:facets] = facets if facets
     query[:filter] = filter if filter
     query
   end
@@ -34,18 +36,22 @@ class QueryBuilder
   private
 
   def facets
-    QueryBuilder.TERM_FILTERS.reduce({}) do |memo, filter|
-      memo[filter] = { terms: { field: filter.to_s, size: 999 } }
+    facets = @facets & QueryBuilder.TERM_FILTERS
+    return unless facets.present?
+
+    facets.reduce({}) do |memo, filter|
+      memo[filter] = { terms: { field: filter.to_s, size: 100 } }
       memo
     end
   end
 
   def filter
-    return unless (term_filters || range_filters)
+    return unless (term_filters || range_filters || image_filter)
 
     must = []
     must.concat(term_filters) if term_filters
     must.concat(range_filters) if range_filters
+    must.concat(image_filter) if image_filter
     { bool: { must: must } }
   end
 
@@ -69,5 +75,10 @@ class QueryBuilder
     ranges << { range: { latest: { gte: earliest } } } if earliest.present?
     ranges << { range: { earliest: { lte: latest } } } if latest.present?
     ranges
+  end
+
+  def image_filter
+    return unless @images
+    [ { exists: { field: :images } }]
   end
 end

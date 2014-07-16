@@ -89,13 +89,5 @@
         <atom name="CreSubjectClassification">period: 1920s</atom>
       </tuple>
     </table>
-    <table name="MulMultiMediaRef_tab">
-      <tuple>
-        <atom name="irn">37380</atom>
-        <atom name="MulTitle">2008.40.4.238</atom>
-        <atom name="Multimedia">37/380/2008-40-4-238-Back.tif</atom>
-        <atom name="AdmPublishWebNoPassword">Yes</atom>
-      </tuple>
-    </table>
   </tuple>
 </table>

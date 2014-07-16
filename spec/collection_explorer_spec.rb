@@ -21,11 +21,10 @@ describe DataAPI do
       json['items'].first.should == collection_item
     end
 
-    it 'should include facets' do
+    it 'should not include facets by default' do
       get '/search', q: '*'
       json = JSON.parse(last_response.body)
-      facet = json['facets'][0]
-      facet['title'].should == 'type'
+      facet = json['facets'].should be_nil
     end
 
     context 'given a page size' do
@@ -47,6 +46,15 @@ describe DataAPI do
       #   json = JSON.parse(last_response.body)
       #   json['total'].should == 2
       # end
+    end
+
+    context 'given a field to facet on' do
+      it 'should include the facet' do
+        get '/search', q: '*', facets: 'type'
+        json = JSON.parse(last_response.body)
+        facet = json['facets'][0]
+        facet['title'].should == 'type'
+      end
     end
 
     context 'given a term filter' do
@@ -72,6 +80,14 @@ describe DataAPI do
 
       it 'should not return results within the range' do
         get '/search', earliest: '1918', latest: '1918'
+        json = JSON.parse(last_response.body)
+        json['total'].should == 0
+      end
+    end
+
+    context 'given images=true' do
+      it 'should filter out results which do not have an image' do
+        get '/search', q: '*', images: 'true'
         json = JSON.parse(last_response.body)
         json['total'].should == 0
       end

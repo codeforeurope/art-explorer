@@ -36,13 +36,17 @@ class DataAPI < Grape::API
     from = (page-1) * size
     term_filters = params.slice(*QueryBuilder.TERM_FILTERS)
     range_filters = params.slice(*QueryBuilder.RANGE_FILTERS)
+    facets = params.fetch(:facets, '').split(',').map(&:strip).map(&:to_sym)
+    images = (params.fetch(:images, '') == 'true')
 
     builder = QueryBuilder.new({
       query: q,
       size: size,
       from: from,
       term_filters: term_filters,
-      range_filters: range_filters
+      range_filters: range_filters,
+      facets: facets,
+      images: images
     })
     response = CollectionItem.search(builder.query)
 
