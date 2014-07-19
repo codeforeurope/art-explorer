@@ -19,6 +19,8 @@ class QueryBuilder
     @facets = opts.fetch(:facets, [])
     @term_filters = opts.fetch(:term_filters, {})
     @range_filters = opts.fetch(:range_filters, {})
+    @sort = opts.fetch(:sort, :identifier)
+    @sort_order = opts.fetch(:sort_order, :asc)
     @images = opts.fetch(:images, false)
   end
 
@@ -26,7 +28,8 @@ class QueryBuilder
     query = {
       query: { query_string: { query: @query } },
       from: @from,
-      size: @size
+      size: @size,
+      sort: { @sort => { order: @sort_order }}
     }
     query[:facets] = facets if facets
     query[:filter] = filter if filter

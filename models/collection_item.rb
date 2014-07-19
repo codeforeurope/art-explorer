@@ -8,7 +8,10 @@ class CollectionItem < Hashie::Dash
     end
 
     def index_mapping
-      { 'collection-item' => { properties: {} } }
+      { 'collection-item' => { properties: {
+        identifier: { type: :string, index: :not_analyzed },
+        subject: { type: :string, index: :not_analyzed }
+      } } }
     end
 
     def search(body)

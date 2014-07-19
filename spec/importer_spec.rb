@@ -5,7 +5,7 @@ describe CollectionData::Importer do
     let(:filename) { 'spec/support/example_data.xml' }
 
     it 'should create a CollectionItem for each entry in the given data' do
-      expect{ CollectionData::Importer.import(filename); Search.refresh }.to change{ CollectionItem.search(query: {match_all: {}}).total }.by(1)
+      expect{ CollectionData::Importer.import(filename); Search.refresh }.to change{ CollectionItem.search(query: {match_all: {}}).total }.by(2)
     end
 
     it 'should populate elasticsearch from the given xml file' do

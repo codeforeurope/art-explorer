@@ -23,6 +23,10 @@ class DataAPI < Grape::API
     optional :q,   type: String,  desc: 'A valid search query', default: '*'
     optional :p,   type: Integer, desc: 'An optional page number'
     optional :pp,  type: Integer, desc: 'An optional page size'
+    optional :f,   type: String,  desc: 'An optional set of comma-separated fields to facet on'
+    optional :s,   type: String,  desc: 'A field to sort on'
+    optional :so,  type: String,  desc: "Order in which to sort – either 'asc' or 'desc'"
+    optional :i,   type: Boolean, desc: "Set to 'true' to return records with images only"
 
     # filters
     (QueryBuilder.TERM_FILTERS && QueryBuilder.RANGE_FILTERS).each do |filter|
@@ -36,8 +40,10 @@ class DataAPI < Grape::API
     from = (page-1) * size
     term_filters = params.slice(*QueryBuilder.TERM_FILTERS)
     range_filters = params.slice(*QueryBuilder.RANGE_FILTERS)
-    facets = params.fetch(:facets, '').split(',').map(&:strip).map(&:to_sym)
-    images = (params.fetch(:images, '') == 'true')
+    facets = params.fetch(:f, '').split(',').map(&:strip).map(&:to_sym)
+    images = params.fetch(:i, false)
+    sort = params.fetch(:s, :identifier)
+    sort_order = params.fetch(:so, :asc)
 
     builder = QueryBuilder.new({
       query: q,
@@ -46,6 +52,8 @@ class DataAPI < Grape::API
       term_filters: term_filters,
       range_filters: range_filters,
       facets: facets,
+      sort: sort,
+      sort_order: sort_order,
       images: images
     })
     response = CollectionItem.search(builder.query)

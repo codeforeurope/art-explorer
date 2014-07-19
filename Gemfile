@@ -24,6 +24,10 @@ group :test do
   gem 'rack-test', require: 'rack/test'
 end
 
+group :development, :test do
+  gem 'pry'
+end
+
 group :production do
   gem 'unicorn'
 end

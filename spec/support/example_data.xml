@@ -90,4 +90,94 @@
       </tuple>
     </table>
   </tuple>
+  <tuple>
+    <atom name="irn">123457</atom>
+    <atom name="TitAccessionNo">1961.142/1B</atom>
+    <table name="Group1">
+      <tuple>
+        <atom name="NamFirst">John</atom>
+        <atom name="NamMiddle"></atom>
+        <atom name="NamLast">Doe</atom>
+        <atom name="NamSuffix">Sir</atom>
+        <atom name="NamFullName">Sir John Doe</atom>
+        <atom name="NamOrganisation"></atom>
+      </tuple>
+    </table>
+    <tuple name="AccAccessionLotRef">
+      <atom name="SummaryData">Jane Doe (gift, 1961)</atom>
+      <atom name="AcqCreditLine"></atom>
+    </tuple>
+    <table name="Group2">
+      <tuple>
+        <atom name="CreDateCreated">1921-1925</atom>
+        <atom name="CreEarliestDate">1921</atom>
+        <atom name="CreLatestDate">1925</atom>
+      </tuple>
+    </table>
+    <atom name="TitObjectName">Another great hat</atom>
+    <atom name="TitMainTitle">Hat</atom>
+    <atom name="TitSeriesTitle"></atom>
+    <atom name="TitCollectionTitle"></atom>
+    <table name="TitCollectionGroup_tab">
+      <tuple>
+        <atom name="TitCollectionGroup">costume</atom>
+      </tuple>
+      <tuple>
+        <atom name="TitCollectionGroup">women</atom>
+      </tuple>
+      <tuple>
+        <atom name="TitCollectionGroup">headwear</atom>
+      </tuple>
+    </table>
+    <table name="PhyMedium_tab">
+      <tuple>
+        <atom name="PhyMedium">hat</atom>
+      </tuple>
+    </table>
+    <table name="PhyMaterial_tab">
+      <tuple>
+        <atom name="PhyMaterial">horsehair</atom>
+      </tuple>
+      <tuple>
+        <atom name="PhyMaterial">silk</atom>
+      </tuple>
+      <tuple>
+        <atom name="PhyMaterial">cotton</atom>
+      </tuple>
+    </table>
+    <atom name="PhySupport"></atom>
+    <table name="PhyTechnique_tab">
+      <tuple>
+        <atom name="PhyTechnique">plaited</atom>
+      </tuple>
+    </table>
+    <atom name="PhyDescription">Seven squirrels stuffed and stitched together in a series of amusing bacchanal poses, in turn stitched to the outside of a fez.</atom>
+    <table name="Group4">
+      <tuple>
+        <atom name="CreCreationPlace1">Europe</atom>
+        <atom name="CreCreationPlace2">United Kingdom</atom>
+        <atom name="CreCreationPlace3">England</atom>
+        <atom name="CreCreationPlace4">London</atom>
+      </tuple>
+    </table>
+    <atom name="CrePrimaryInscriptions">Label: "John Doe, Miliner"</atom>
+    <atom name="CreProvenance"></atom>
+    <atom name="RefCatalogueRaisonne"></atom>
+    <tuple name="LocCurrentLocationRef">
+      <atom name="LocLevel1">Platt Hall</atom>
+      <atom name="LocLevel2"></atom>
+      <atom name="LocLevel3"></atom>
+      <atom name="LocLevel4"></atom>
+      <atom name="LocLevel5"></atom>
+      <atom name="LocLevel6"></atom>
+    </tuple>
+    <table name="CreSubjectClassification_tab">
+      <tuple>
+        <atom name="CreSubjectClassification">period: 20th century</atom>
+      </tuple>
+      <tuple>
+        <atom name="CreSubjectClassification">period: 1920s</atom>
+      </tuple>
+    </table>
+  </tuple>
 </table>

@@ -12,7 +12,7 @@ describe DataAPI do
     it 'should return the total no. of results' do
       get '/search', q: '*'
       json = JSON.parse(last_response.body)
-      json['total'].should == 1
+      json['total'].should == 2
     end
 
     it 'should return the results as JSON' do
@@ -50,7 +50,7 @@ describe DataAPI do
 
     context 'given a field to facet on' do
       it 'should include the facet' do
-        get '/search', q: '*', facets: 'type'
+        get '/search', q: '*', f: 'type'
         json = JSON.parse(last_response.body)
         facet = json['facets'][0]
         facet['title'].should == 'type'
@@ -61,7 +61,7 @@ describe DataAPI do
       it 'should return results matching the given filter' do
         get '/search', type: 'plaited'
         json = JSON.parse(last_response.body)
-        json['total'].should == 1
+        json['total'].should == 2
       end
 
       it 'should not return results which do not match the given filter' do
@@ -75,7 +75,7 @@ describe DataAPI do
       it 'should return results within the range' do
         get '/search', earliest: '1922', latest: '1922'
         json = JSON.parse(last_response.body)
-        json['total'].should == 1
+        json['total'].should == 2
       end
 
       it 'should not return results within the range' do
@@ -87,9 +87,17 @@ describe DataAPI do
 
     context 'given images=true' do
       it 'should filter out results which do not have an image' do
-        get '/search', q: '*', images: 'true'
+        get '/search', q: '*', i: 'true'
         json = JSON.parse(last_response.body)
         json['total'].should == 0
+      end
+    end
+
+    context 'given a sort field and order' do
+      it 'should sort the results by the given field' do
+        get '/search', q: '*', s: 'earliest', so: 'desc'
+        json = JSON.parse(last_response.body)
+        json['items'].map{|i| i['earliest']}.should == [1921, 1920]
       end
     end
   end

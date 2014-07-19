@@ -7,8 +7,8 @@ require './collection_data'
 RSpec.configure do |config|
   config.include Rack::Test::Methods
   config.before(:each) do
-    Search.clear
-    Search.create_index
+    CollectionData::Importer.clear_index
+    CollectionData::Importer.create_index
   end
 
   def app

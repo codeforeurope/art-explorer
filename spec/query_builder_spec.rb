@@ -15,7 +15,8 @@ describe QueryBuilder do
         builder.query.should == {
           query: {query_string: {query: "foo"}},
           from: 0,
-          size: 100
+          size: 100,
+          sort: { :identifier => { order: :asc }}
         }
       end
     end
