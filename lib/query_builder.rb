@@ -1,6 +1,6 @@
 class QueryBuilder
   class << self
-    @@_TERM_FILTERS = [:type, :subject]
+    @@_TERM_FILTERS = [:type, :subject, :creator]
     @@_RANGE_FILTERS = [:earliest, :latest]
 
     def TERM_FILTERS
@@ -43,9 +43,17 @@ class QueryBuilder
     return unless facets.present?
 
     facets.reduce({}) do |memo, filter|
-      memo[filter] = { terms: { field: filter.to_s, size: 100 } }
+      memo[filter] = { terms: { field: filter_map(filter), size: 100 } }
       memo
     end
+  end
+
+  def filter_map(filter)
+    f = {
+      creator: 'creator.untouched'
+    }[filter]
+    f ||= filter.to_s
+    f
   end
 
   def filter

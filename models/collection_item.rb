@@ -10,7 +10,11 @@ class CollectionItem < Hashie::Dash
     def index_mapping
       { 'collection-item' => { properties: {
         identifier: { type: :string, index: :not_analyzed },
-        subject: { type: :string, index: :not_analyzed }
+        subject: { type: :string, index: :not_analyzed },
+        creator: { type: :multi_field, fields: {
+          creator: { type: :string, index: :analyzed },
+          untouched: { type: :string, index: :not_analyzed }
+        } }
       } } }
     end
 

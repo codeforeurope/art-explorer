@@ -57,6 +57,15 @@ describe DataAPI do
       end
     end
 
+    context 'given an artist name to facet on' do
+      it 'should include the full name in the facet' do
+        get '/search', q: '*', f: 'creator'
+        json = JSON.parse(last_response.body)
+        facet = json['facets'][0]
+        facet['terms'].first['term'].should == 'Sir John Doe'
+      end
+    end
+
     context 'given a term filter' do
       it 'should return results matching the given filter' do
         get '/search', type: 'plaited'

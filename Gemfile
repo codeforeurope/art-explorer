@@ -26,6 +26,7 @@ end
 
 group :development, :test do
   gem 'pry'
+  gem 'binding_of_caller'
 end
 
 group :production do
