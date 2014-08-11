@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Welcome to the Github repo for Manchester Art Gallery's art collection explorer, a semi-official open data API created during [my](http://github.com/asacalow) time as a [European Code Fellow](http://codeforeurope.net), with [Manchester Art Gallery](http://manchestergalleries.org) and the [Manchester Digital Development Agency](http://manchesterdda.com).
+Welcome to the Github repo for Manchester Art Gallery's art collection explorer, the official open data API for Manchester Art Gallery, created during [my](http://github.com/asacalow) time as a [European Code Fellow](http://codeforeurope.net), with [Manchester Art Gallery](http://manchestergalleries.org) and the [Manchester Digital Development Agency](http://manchesterdda.com).
 
 You can at present find an instance of this application [here](http://ce.asacalow.me).
 
@@ -48,4 +48,4 @@ This app is so basic that it could easily be re-used for any number of purposes.
 
 ## License
 
-This project is released under an MIT Licence. 
+This project is released under an MIT Licence.
