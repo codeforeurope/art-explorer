@@ -26,7 +26,14 @@ class QueryBuilder
 
   def query
     query = {
-      query: { query_string: { query: @query } },
+      query: { bool: { should: [
+        { query_string: { query: @query, default_operator: 'AND', default_field: 'type',        boost: 8 } },
+        { query_string: { query: @query, default_operator: 'AND', default_field: 'subject',     boost: 8 } },
+        { query_string: { query: @query, default_operator: 'AND', default_field: 'creator',     boost: 4 } },
+        { query_string: { query: @query, default_operator: 'AND', default_field: 'title',       boost: 2 } },
+        { query_string: { query: @query, default_operator: 'AND', default_field: 'description', boost: 1 } },
+        { query_string: { query: @query, default_operator: 'AND', default_field: '_all',        boost: 0.5 } }
+      ] } },
       from: @from,
       size: @size,
       sort: { @sort => { order: @sort_order }}
