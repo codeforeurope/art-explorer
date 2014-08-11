@@ -16,7 +16,6 @@ CMD ["/sbin/my_init"]
 
 ## Beginning of main build instructions
 
-EXPOSE 8080
 EXPOSE 80
 
 # Install packages for building ruby

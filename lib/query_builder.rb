@@ -50,7 +50,8 @@ class QueryBuilder
 
   def filter_map(filter)
     f = {
-      creator: 'creator.untouched'
+      type: 'type.exact',
+      creator: 'creator.exact'
     }[filter]
     f ||= filter.to_s
     f

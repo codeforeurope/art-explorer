@@ -13,7 +13,11 @@ class CollectionItem < Hashie::Dash
         subject: { type: :string, index: :not_analyzed },
         creator: { type: :multi_field, fields: {
           creator: { type: :string, index: :analyzed },
-          untouched: { type: :string, index: :not_analyzed }
+          exact: { type: :string, index: :not_analyzed }
+        } },
+        type: { type: :multi_field, fields: {
+          type: { type: :string, index: :analyzed },
+          exact: { type: :string, index: :not_analyzed }
         } }
       } } }
     end
@@ -50,7 +54,6 @@ class CollectionItem < Hashie::Dash
   property :description
   property :earliest
   property :latest
-  property :format
   property :creator
   property :title
   property :type

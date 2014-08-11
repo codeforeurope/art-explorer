@@ -58,11 +58,12 @@ class DataAPI < Grape::API
     })
     response = CollectionItem.search(builder.query)
 
-    {
+    data = {
       total: response.total,
-      items: response.results,
-      facets: response.facets
+      items: response.results
     }
+    data[:facets] = response.facets if response.facets
+    data
   end
 
   rescue_from CollectionItem::RecordNotFound do |e|

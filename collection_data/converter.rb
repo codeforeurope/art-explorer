@@ -55,7 +55,7 @@ module CollectionData
     }
     convert ->(xml, data) {
       place_name = xml.xpath('table[@name="Group4"]/tuple/atom').map(&:text).join(', ')
-      data[:coverage] = { placename: place_name } if place_name
+      data[:coverage] = { placename: place_name } if (place_name && place_name != '')
       data
     }
     convert ->(xml,data) {
