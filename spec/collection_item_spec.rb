@@ -28,8 +28,8 @@ describe CollectionItem do
   end
 
   describe '.find' do
-    let(:identifier) { '1961.142/1A' }
-    
+    let(:identifier) { '1961.142/1A B/C' }
+
     it 'should return the record matching the given accession number' do
       CollectionItem.find(identifier).identifier == identifier
     end

@@ -6,7 +6,7 @@ describe DataAPI do
     Search.refresh
   end
 
-  let(:collection_item) { CollectionItem.find('1961.142/1A') }
+  let(:collection_item) { CollectionItem.find('1961.142/1A B/C') }
 
   describe 'GET /search' do
     it 'should return the total no. of results' do
@@ -112,13 +112,15 @@ describe DataAPI do
   end
 
   describe 'GET /i/:id' do
+    let(:id) { URI.encode(collection_item.identifier) }
+
     it 'should respond successfully' do
-      get "/i/#{collection_item.identifier}"
+      get "/i/#{id}"
       last_response.status.should == 200
     end
 
     it 'should return the collection item as JSON' do
-      get "/i/#{collection_item.identifier}"
+      get "/i/#{id}"
       json = JSON.parse(last_response.body)
       json.should == collection_item
     end

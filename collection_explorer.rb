@@ -74,8 +74,8 @@ class DataAPI < Grape::API
   params do
     requires :id, type: String, desc: 'The accession number of the record'
   end
-  get '/i/:id', requirements: {id: /[\w\/\.]+/} do
-    id = params[:id]
+  get '/i/:id', requirements: {id: /[\w\/\.\%]+/} do
+    id = URI.decode(params[:id])
     CollectionItem.find(id)
   end
 end
