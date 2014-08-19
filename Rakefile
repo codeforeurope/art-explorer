@@ -20,6 +20,21 @@ namespace :data do
     end
   end
 
+  desc "Just import data from a KE data dump."
+  task :import_data, :folder do |t, args|
+    file = nil
+    Dir.glob("#{args.folder}/*.zip") do |f|
+      file = f
+    end
+
+    raise Exception.new('.zip file not found at the given location') unless file
+
+    Raven.capture do
+      CollectionData::Extracter.extract(file: file, data_only: true)
+      CollectionData::Importer.import('data.xml')
+    end
+  end
+
   desc "Clear data from elasticsearch"
   task :clear do
     CollectionData::Importer.clear_index
