@@ -19,7 +19,12 @@ module CollectionData
       in_path = File.join('tmp', File.basename(entry.name))
       entry.extract(in_path)
       processor = CollectionData::ImageProcessor.new
-      processor.process_image(filename: filename, in_path: in_path, out_path: out_path)
+      begin
+        processor.process_image(filename: filename, in_path: in_path, out_path: out_path)
+      rescue Exception => e
+        Raven.capture_exception(e, extra: { in_path: in_path })
+      end
+
       FileUtils.rm(in_path)
     end
 
