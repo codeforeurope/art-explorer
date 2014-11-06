@@ -49,13 +49,15 @@ class QueryBuilder
     facets = @facets & QueryBuilder.TERM_FILTERS
     return unless facets.present?
 
-    facets.reduce({}) do |memo, filter|
-      memo[filter] = { terms: { field: filter_map(filter), size: 100 } }
+    facets.reduce({}) do |memo, field|
+      facet = { terms: { field: field_map(field), size: 100 } }
+      facet[:facet_filter] = image_filter.first if image_filter # the image filter is special as it also applies to aggregate results
+      memo[field] = facet
       memo
     end
   end
 
-  def filter_map(filter)
+  def field_map(filter)
     f = {
       type: 'type.exact',
       creator: 'creator.exact'
@@ -78,6 +80,7 @@ class QueryBuilder
     return unless @term_filters.present?
 
     terms = @term_filters.reduce({}) do |memo, (field, value)|
+      field = field_map(field)
       memo[field] = value.split(',').map(&:strip)
       memo
     end
@@ -98,6 +101,6 @@ class QueryBuilder
 
   def image_filter
     return unless @images
-    [ { exists: { field: :images } }]
+    [ { exists: { field: :images } } ]
   end
 end
