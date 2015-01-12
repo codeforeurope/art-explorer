@@ -1,9 +1,9 @@
 development:
-  host: 'localhost:9200/'
+  host: '127.0.0.1:9200/'
   index: 'collection-explorer-dev'
 production:
   host: <%= ENV.fetch('ELASTICSEARCH_PORT', '').gsub('tcp', 'http') %>
   index: 'collection-explorer'
 test:
-  host: 'localhost:9200/'
+  host: '127.0.0.1:9200/'
   index: 'collection-explorer-test'

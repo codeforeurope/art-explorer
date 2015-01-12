@@ -64,7 +64,31 @@ module CollectionData
         data[:images] ||= []
         path = node.at_xpath('atom[@name="Multimedia"]').text
         path.gsub!(/jpg|JPG|tif|TIF/, 'jpg')
-        data[:images] << path
+        acknowledgement = node.at_xpath('atom[@name="DetRights"]').try(:text)
+        data[:images] << { path: path, acknowledgement: acknowledgement }
+      end
+      data
+    }
+    convert ->(xml,data) {
+      xml.xpath('table[@name="RigRightsRef_tab"]/tuple').each do |node|
+        next unless node.at_xpath('atom[@name="RigRequiresAcknowledgement"]').try(:text) == 'Yes'
+        data[:acknowledgement] = node.at_xpath('atom[@name="RigAcknowledgement"]').text
+      end
+      data
+    }
+    convert ->(xml, data) {
+      xml.xpath('tuple[@name="LocCurrentLocationRef"]').each do |node|
+        next unless node.at_xpath('atom[@name="AdmPublishWebNoPassword"]').try(:text) == 'Yes'
+        location = node.at_xpath('atom[@name="SummaryData"]').text
+        data[:location] = location
+      end
+      data
+    }
+    convert ->(xml, data) {
+      xml.xpath('tuple[@name="AccAccessionLotRef"]').each do |node|
+        next unless node.at_xpath('atom[@name="AdmPublishWebNoPassword"]').try(:text) == 'Yes'
+        credit = node.at_xpath('atom[@name="AcqCreditLine"]').text
+        data[:acquisition_credit] = credit
       end
       data
     }

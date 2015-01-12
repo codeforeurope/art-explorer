@@ -36,5 +36,22 @@ describe CollectionData::Converter do
     it 'should set the placename' do
       conversion[:coverage][:placename].should == 'Europe, United Kingdom, England, London'
     end
+
+    it 'should parse the rights acknowledgement correctly' do
+      conversion[:acknowledgement].should == '©Manchester City Galleries'
+    end
+
+    it 'should parse the images correctly' do
+      image = conversion[:images].first
+      image.should == { path: '1/2/3.jpg', acknowledgement: '©Manchester City Galleries' }
+    end
+
+    it 'should parse the location correctly' do
+      conversion[:location].should == 'Main Gallery'
+    end
+
+    it 'should parse the acquisition credit line correctly' do
+      conversion[:acquisition_credit].should == 'Transferred from the Royal Manchester Institution.'
+    end
   end
 end

@@ -18,7 +18,8 @@ describe DataAPI do
     it 'should return the results as JSON' do
       get '/search', q: '*'
       json = JSON.parse(last_response.body)
-      json['items'].first.should == collection_item
+      item = json['items'].first.symbolize_keys
+      item.should =~ collection_item
     end
 
     it 'should not include facets by default' do
@@ -98,7 +99,7 @@ describe DataAPI do
       it 'should filter out results which do not have an image' do
         get '/search', q: '*', i: 'true'
         json = JSON.parse(last_response.body)
-        json['total'].should == 0
+        json['total'].should == 1
       end
     end
 
@@ -122,7 +123,8 @@ describe DataAPI do
     it 'should return the collection item as JSON' do
       get "/i/#{id}"
       json = JSON.parse(last_response.body)
-      json.should == collection_item
+      json.symbolize_keys!
+      json.should =~ collection_item
     end
 
     context 'given a non-existent ID' do

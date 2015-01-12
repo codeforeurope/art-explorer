@@ -80,7 +80,7 @@ class QueryBuilder
     return unless @term_filters.present?
 
     terms = @term_filters.reduce({}) do |memo, (field, value)|
-      field = field_map(field)
+      field = field_map(field.to_sym)
       memo[field] = value.split(',').map(&:strip)
       memo
     end

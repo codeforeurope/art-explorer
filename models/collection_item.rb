@@ -39,7 +39,8 @@ class CollectionItem < Hashie::Dash
     end
 
     def from_result(result)
-      CollectionItem.new(result._source)
+      attributes = result._source.to_hash.symbolize_keys
+      CollectionItem.new(attributes)
     end
 
     def reduce_facets!(response)
@@ -59,5 +60,8 @@ class CollectionItem < Hashie::Dash
   property :type
   property :subject
   property :coverage      # just placename for now
-  property :images        # an array of images
+  property :images        # an array of images (including image rights acknowledgements)
+  property :acknowledgement # artistic rights, acknowledgement notice
+  property :location
+  property :acquisition_credit
 end

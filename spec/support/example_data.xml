@@ -74,12 +74,8 @@
     <atom name="CreProvenance"></atom>
     <atom name="RefCatalogueRaisonne"></atom>
     <tuple name="LocCurrentLocationRef">
-      <atom name="LocLevel1">Platt Hall</atom>
-      <atom name="LocLevel2"></atom>
-      <atom name="LocLevel3"></atom>
-      <atom name="LocLevel4"></atom>
-      <atom name="LocLevel5"></atom>
-      <atom name="LocLevel6"></atom>
+      <atom name="SummaryData">Main Gallery</atom>
+      <atom name="AdmPublishWebNoPassword">Yes</atom>
     </tuple>
     <table name="CreSubjectClassification_tab">
       <tuple>
@@ -89,6 +85,30 @@
         <atom name="CreSubjectClassification">period: 1920s</atom>
       </tuple>
     </table>
+    <table name="MulMultiMediaRef_tab">
+      <tuple>
+        <atom name="irn">40586</atom>
+        <atom name="MulTitle">2008.40.5.1530</atom>
+        <atom name="Multimedia">1/2/3.tif</atom>
+        <atom name="DetRights">&#169;Manchester City Galleries</atom>
+        <atom name="AdmPublishWebNoPassword">Yes</atom>
+      </tuple>
+    </table>
+    <table name="RigRightsRef_tab">
+      <tuple>
+        <atom name="RigRequiresAcknowledgement">Yes</atom>
+        <atom name="RigAcknowledgement">&#169;Manchester City Galleries</atom>
+      </tuple>
+    </table>
+    <tuple name="LocCurrentLocationRef">
+      <atom name="SummaryData">Queens Park - art store - 22R</atom>
+      <atom name="AdmPublishWebNoPassword">No</atom>
+    </tuple>
+    <atom name="AdmPublishWebNoPassword">Yes</atom>
+    <tuple name="AccAccessionLotRef">
+      <atom name="AcqCreditLine">Transferred from the Royal Manchester Institution.</atom>
+      <atom name="AdmPublishWebNoPassword">Yes</atom>
+    </tuple>
   </tuple>
   <tuple>
     <atom name="irn">123457</atom>
@@ -164,12 +184,8 @@
     <atom name="CreProvenance"></atom>
     <atom name="RefCatalogueRaisonne"></atom>
     <tuple name="LocCurrentLocationRef">
-      <atom name="LocLevel1">Platt Hall</atom>
-      <atom name="LocLevel2"></atom>
-      <atom name="LocLevel3"></atom>
-      <atom name="LocLevel4"></atom>
-      <atom name="LocLevel5"></atom>
-      <atom name="LocLevel6"></atom>
+      <atom name="SummaryData">Queens Park - art store - cupboard 19 - shelf 2</atom>
+      <atom name="AdmPublishWebNoPassword">No</atom>
     </tuple>
     <table name="CreSubjectClassification_tab">
       <tuple>
@@ -179,5 +195,20 @@
         <atom name="CreSubjectClassification">period: 1920s</atom>
       </tuple>
     </table>
+    <table name="RigRightsRef_tab">
+      <tuple>
+        <atom name="RigRequiresAcknowledgement">Yes</atom>
+        <atom name="RigAcknowledgement">Manchester City Galleries</atom>
+      </tuple>
+    </table>
+    <tuple name="LocCurrentLocationRef">
+      <atom name="SummaryData">Queens Park - art store - 22R</atom>
+      <atom name="AdmPublishWebNoPassword">No</atom>
+    </tuple>
+    <atom name="AdmPublishWebNoPassword">Yes</atom>
+    <tuple name="AccAccessionLotRef">
+      <atom name="AcqCreditLine">Transferred from the Royal Manchester Institution.</atom>
+      <atom name="AdmPublishWebNoPassword">Yes</atom>
+    </tuple>
   </tuple>
 </table>

@@ -11,6 +11,7 @@ module CollectionData
       reader.each do |node|
         fragment = Nokogiri::XML.fragment(node.inner_xml)
         next unless is_item_node?(fragment) # skip unless node is an object to import
+        next unless is_publishable?(fragment)
         process(fragment)
         flush if flush?
       end
@@ -43,6 +44,11 @@ module CollectionData
 
     def is_item_node?(xml_fragment)
       !!xml_fragment.at_xpath('atom[@name="TitAccessionNo"]')
+    end
+
+    def is_publishable?(xml_fragment)
+      to_publish = xml_fragment.at_xpath('atom[@name="AdmPublishWebNoPassword"]').text rescue nil
+      (to_publish == 'Yes')
     end
 
     def flush?
