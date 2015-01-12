@@ -15,6 +15,7 @@ class DataAPI < Grape::API
 
   version 'v1', using: :header, vendor: 'manchestergalleries'
   format :json
+  content_type :json, 'application/json; charset=utf-8'
 
   logger Logger.new('log/app.log')
 
